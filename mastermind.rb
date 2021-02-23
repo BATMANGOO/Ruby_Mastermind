@@ -1,6 +1,7 @@
 require_relative './display'
 
 class Mastermind
+  include Display
   attr_accessor :round
 
   def initialize
@@ -8,21 +9,16 @@ class Mastermind
   end
 
   def play_game
-    Display.instructions
-
+    instructions
+    guess_the_code
   end
 
   def guess_the_code
     code = cpu_generated_code
-    until round > 13 
-      if round == 12
-        puts 'this is your last guess!'
-      elsif round == 13 
-        puts 'Game over, you lose!'
-      else
-        puts "round ##{round}"
-      end
-
+    until round > 13
+      round_output(round)
+      input = gets.chomp
+      puts input
       @round += 1
     end
   end
@@ -32,8 +28,16 @@ class Mastermind
   def cpu_generated_code
     [rand(1..6), rand(1..6), rand(1..6), rand(1..6)].join.to_i
   end
+
+  def game_over?(input, cipher)
+    input == cipher
+  end
+
+  def guess_accuracy(guess)
+
+  end
 end
 
 game = Mastermind.new
 
-game.guess_the_code
+game.play_game
