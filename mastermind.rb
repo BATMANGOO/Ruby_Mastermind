@@ -13,17 +13,17 @@ class Mastermind
     guess_the_code
   end
 
+  # private
+
   def guess_the_code
     code = cpu_generated_code
     until round > 13
       round_output(round)
-      input = gets.chomp
-      puts input
+      input = valid_input?(gets.chomp).to_i
+      guess_accuracy(input, code)
       @round += 1
     end
   end
-
-  private
 
   def cpu_generated_code
     [rand(1..6), rand(1..6), rand(1..6), rand(1..6)].join.to_i
@@ -33,11 +33,23 @@ class Mastermind
     input == cipher
   end
 
-  def guess_accuracy(guess)
+  def guess_accuracy(guess, cipher)
+    
+  end
 
+  def valid_input?(input)
+    if input.to_s.length == 4
+      input
+    else
+      input_error
+      input = gets.chomp
+      valid_input?(input)
+    end
   end
 end
 
 game = Mastermind.new
+game.guess_the_code
 
-game.play_game
+
+# puts game.guess_accuracy(1234,2245)

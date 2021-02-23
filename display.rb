@@ -32,4 +32,8 @@ module Display
       puts "round ##{round}, Enter a 4 digit input:"
     end
   end
+
+  def input_error
+    puts 'Input needs to be 4 numbers. Try again.'
+  end
 end
