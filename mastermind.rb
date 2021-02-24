@@ -1,3 +1,4 @@
+require 'colorize'
 require_relative './display'
 
 class Mastermind
@@ -11,16 +12,21 @@ class Mastermind
   def play_game
     instructions
     guess_the_code
+    conclusion
   end
 
   # private
 
   def guess_the_code
     code = cpu_generated_code
+    puts code
     until round > 13
       round_output(round)
       input = valid_input?(gets.chomp).to_i
       guess_accuracy(input, code)
+      break if game_over?(input, code)
+
+
       @round += 1
     end
   end
@@ -33,8 +39,22 @@ class Mastermind
     input == cipher
   end
 
-  def guess_accuracy(guess, cipher)
-    
+  def guess_accuracy(input, cipher)
+    guess = ['', '', '', '']
+    cipher_split = cipher.to_s.split('')
+    input_split = input.to_s.split('')
+    # input.split('').each do |i|
+    #   p cipher.index(i)
+    #   p input.index(i)
+    #   if cipher.index(i) == input
+    #     guess[input.index(i)] = 'X'
+    #   elsif cipher.include?(input[i])
+    #     guess[input.index(i)] = 'O'
+    #   else
+    #     return
+    #   end
+    # end
+    p guess
   end
 
   def valid_input?(input)
