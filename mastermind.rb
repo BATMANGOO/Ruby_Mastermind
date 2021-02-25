@@ -1,4 +1,5 @@
 require 'colorize'
+require 'pry'
 require_relative './display'
 
 class Mastermind
@@ -41,21 +42,29 @@ class Mastermind
 
   def guess_accuracy(input, cipher)
     guess = ['', '', '', '']
-    exact_match?(input, cipher, guess)
     contains_number(input, cipher, guess)
+    exact_match?(input, cipher, guess)
     p guess
   end
 
   def contains_number(input, cipher, guess)
     cipher_split = cipher.to_s.split('')
     input_split = input.to_s.split('')
-    input_split.each_with_index do |val, idx|
-      if cipher.to_s.include?(val) && cipher_split[idx] != val
-        guess[idx] = 'O'
-        cipher_split.slice!(cipher.to_s.index(val), 1)
+
+    cipher_split.each_with_index do |val, idx|
+      if input_split.include?(val) && input_split[idx] != val
+        input_split.slice!(input.to_s.index(val), 1)
+        guess[input_split[idx]] = 'O'
       end
     end
-    p cipher_split
+
+    # input_split.each.with_index do |val, idx|
+    #   if cipher_split.include?(val) && cipher_split[idx] != val
+    #     cipher_split.slice!(cipher.to_s.index(val), 1)
+    #     guess[idx] = 'O'
+    #   end
+    # end
+    # p input_split
     guess
   end
 
