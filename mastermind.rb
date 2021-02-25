@@ -41,20 +41,42 @@ class Mastermind
 
   def guess_accuracy(input, cipher)
     guess = ['', '', '', '']
+    exact_match?(input, cipher, guess)
+    contains_number(input, cipher, guess)
+    p guess
+  end
+
+  def contains_number(input, cipher, guess)
     cipher_split = cipher.to_s.split('')
     input_split = input.to_s.split('')
-    # input.split('').each do |i|
-    #   p cipher.index(i)
-    #   p input.index(i)
-    #   if cipher.index(i) == input
-    #     guess[input.index(i)] = 'X'
-    #   elsif cipher.include?(input[i])
-    #     guess[input.index(i)] = 'O'
-    #   else
-    #     return
-    #   end
-    # end
-    p guess
+    input_split.each_with_index do |val, idx|
+      if cipher.to_s.include?(val) && cipher_split[idx] != val
+        guess[idx] = 'O'
+        cipher_split.slice!(cipher.to_s.index(val), 1)
+      end
+    end
+    p cipher_split
+    guess
+  end
+
+  def exact_match?(input, cipher, guess)
+    cipher_split = cipher.to_s.split('')
+    input_split = input.to_s.split('')
+    input_split.each do |int|
+      if cipher_split[0] == int && input_split[0] == int
+        guess[0] = 'X'
+      end
+      if cipher_split[1] == int && input_split[1] == int
+        guess[1] = 'X'
+      end
+      if cipher_split[2] == int && input_split[2] == int
+        guess[2] = 'X'
+      end
+      if cipher_split[3] == int && input_split[3] == int
+        guess[3] = 'X'
+      end
+    end
+    guess
   end
 
   def valid_input?(input)
@@ -73,3 +95,16 @@ game.guess_the_code
 
 
 # puts game.guess_accuracy(1234,2245)
+
+# for guess_accuracy method
+# input_split.each do |i|
+#   p cipher.index(i)
+#   p input_split.index(i)
+#   if cipher.index(i) == input
+#     guess[input_split.index(i)] = 'X'
+#   elsif cipher.include?(input_split[i])
+#     guess[input_split.index(i)] = 'O'
+#   else
+#     return
+#   end
+# end
