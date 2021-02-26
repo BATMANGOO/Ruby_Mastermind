@@ -27,7 +27,6 @@ class Mastermind
       guess_accuracy(input, code)
       break if game_over?(input, code)
 
-
       @round += 1
     end
   end
@@ -41,51 +40,75 @@ class Mastermind
   end
 
   def guess_accuracy(input, cipher)
-    guess = ['', '', '', '']
-    contains_number(input, cipher, guess)
-    exact_match?(input, cipher, guess)
-    p guess
+    show_clues(exact_match?(input, cipher), contains_number(input, cipher))
   end
 
-  def contains_number(input, cipher, guess)
+  def show_clues(exact, same)
+    print 'Clues: '
+    exact.times { print 'X' }
+    same.times { print 'O' }
+    puts ''
+  end
+
+  def contains_number(input, cipher) # debug this.
     cipher_split = cipher.to_s.split('')
     input_split = input.to_s.split('')
+    same = 0
 
-    cipher_split.each_with_index do |val, idx|
-      if input_split.include?(val) && input_split[idx] != val
-        input_split.slice!(input.to_s.index(val), 1)
-        guess[input_split[idx]] = 'O'
-      end
+    input_split.each_index do |idx|
+      next unless input_split[idx] != 'X' && cipher_split.include?(input_split[idx])
+
+      same += 1
+      remove = cipher_split.find_index(input_split[idx])
+      cipher_split[remove] = '?'
+      input_split[idx] = '?'
     end
+    same
+    # cipher_split.each_with_index do |val, idx|
+    #   if input_split.include?(val) && input_split[idx] != val
+    #     # input_split.slice!(input_split[idx].to_i, 1)
+    #     guess[idx] = 'O'
+    #   end
+    # end
 
     # input_split.each.with_index do |val, idx|
     #   if cipher_split.include?(val) && cipher_split[idx] != val
-    #     cipher_split.slice!(cipher.to_s.index(val), 1)
+    #     same += 1
+    #     same.times { |i = 'O'| }
+    #     cipher_split[idx] = '?'
     #     guess[idx] = 'O'
     #   end
     # end
     # p input_split
-    guess
   end
 
-  def exact_match?(input, cipher, guess)
+  def exact_match?(input, cipher)
     cipher_split = cipher.to_s.split('')
     input_split = input.to_s.split('')
-    input_split.each do |int|
-      if cipher_split[0] == int && input_split[0] == int
-        guess[0] = 'X'
-      end
-      if cipher_split[1] == int && input_split[1] == int
-        guess[1] = 'X'
-      end
-      if cipher_split[2] == int && input_split[2] == int
-        guess[2] = 'X'
-      end
-      if cipher_split[3] == int && input_split[3] == int
-        guess[3] = 'X'
-      end
+
+    exact = 0
+    cipher_split.each_with_index do |val, idx|
+      next unless val == input_split[idx]
+
+      exact += 1
+      cipher_split = 'X'
+      input_split = 'X'
     end
-    guess
+    exact
+    # input_split.each do |int|
+    #   if cipher_split[0] == int && input_split[0] == int
+    #     guess[0] = 'X'
+    #   end
+    #   if cipher_split[1] == int && input_split[1] == int
+    #     guess[1] = 'X'
+    #   end
+    #   if cipher_split[2] == int && input_split[2] == int
+    #     guess[2] = 'X'
+    #   end
+    #   if cipher_split[3] == int && input_split[3] == int
+    #     guess[3] = 'X'
+    #   end
+    # end
   end
 
   def valid_input?(input)
