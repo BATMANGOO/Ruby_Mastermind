@@ -13,15 +13,14 @@ class Mastermind
   def play_game
     instructions
     guess_the_code
-    conclusion
+    play_again
   end
 
-  # private
+  private
 
   def guess_the_code
     code = cpu_generated_code
-    puts code
-    until round > 13
+    until round > 12
       round_output(round)
       input = valid_input?(gets.chomp).to_i
       guess_accuracy(input, code)
@@ -29,6 +28,7 @@ class Mastermind
 
       @round += 1
     end
+    puts win_or_loss(game_over?(input, code))
   end
 
   def cpu_generated_code
@@ -40,19 +40,19 @@ class Mastermind
   end
 
   def guess_accuracy(input, cipher)
-    show_clues(exact_match?(input, cipher), contains_number(input, cipher))
+    cipher_split = cipher.to_s.split('')
+    input_split = input.to_s.split('')
+    show_clues(exact_match?(input_split, cipher_split), contains_number(input_split, cipher_split))
   end
 
   def show_clues(exact, same)
     print 'Clues: '
-    exact.times { print 'X' }
-    same.times { print 'O' }
+    exact.times { print 'X'.blue }
+    same.times { print 'O'.yellow }
     puts ''
   end
 
-  def contains_number(input, cipher) # debug this.
-    cipher_split = cipher.to_s.split('')
-    input_split = input.to_s.split('')
+  def contains_number(input_split, cipher_split)
     same = 0
 
     input_split.each_index do |idx|
@@ -60,55 +60,23 @@ class Mastermind
 
       same += 1
       remove = cipher_split.find_index(input_split[idx])
-      cipher_split[remove] = '?'
-      input_split[idx] = '?'
+      cipher_split[remove] = 'O'
+      input_split[idx] = 'O'
     end
     same
-    # cipher_split.each_with_index do |val, idx|
-    #   if input_split.include?(val) && input_split[idx] != val
-    #     # input_split.slice!(input_split[idx].to_i, 1)
-    #     guess[idx] = 'O'
-    #   end
-    # end
-
-    # input_split.each.with_index do |val, idx|
-    #   if cipher_split.include?(val) && cipher_split[idx] != val
-    #     same += 1
-    #     same.times { |i = 'O'| }
-    #     cipher_split[idx] = '?'
-    #     guess[idx] = 'O'
-    #   end
-    # end
-    # p input_split
   end
 
-  def exact_match?(input, cipher)
-    cipher_split = cipher.to_s.split('')
-    input_split = input.to_s.split('')
-
+  def exact_match?(input_split, cipher_split)
     exact = 0
+
     cipher_split.each_with_index do |val, idx|
       next unless val == input_split[idx]
 
       exact += 1
-      cipher_split = 'X'
-      input_split = 'X'
+      cipher_split[idx] = 'X'
+      input_split[idx] = 'X'
     end
     exact
-    # input_split.each do |int|
-    #   if cipher_split[0] == int && input_split[0] == int
-    #     guess[0] = 'X'
-    #   end
-    #   if cipher_split[1] == int && input_split[1] == int
-    #     guess[1] = 'X'
-    #   end
-    #   if cipher_split[2] == int && input_split[2] == int
-    #     guess[2] = 'X'
-    #   end
-    #   if cipher_split[3] == int && input_split[3] == int
-    #     guess[3] = 'X'
-    #   end
-    # end
   end
 
   def valid_input?(input)
@@ -120,23 +88,18 @@ class Mastermind
       valid_input?(input)
     end
   end
+
+  def play_again
+    conclusion
+    input = gets.chomp.downcase
+    if input == 'y'
+      @round = 1
+      guess_the_code
+    else
+      puts 'Have a great day!'
+    end
+  end
 end
 
 game = Mastermind.new
-game.guess_the_code
-
-
-# puts game.guess_accuracy(1234,2245)
-
-# for guess_accuracy method
-# input_split.each do |i|
-#   p cipher.index(i)
-#   p input_split.index(i)
-#   if cipher.index(i) == input
-#     guess[input_split.index(i)] = 'X'
-#   elsif cipher.include?(input_split[i])
-#     guess[input_split.index(i)] = 'O'
-#   else
-#     return
-#   end
-# end
+game.play_game
