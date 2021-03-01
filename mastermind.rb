@@ -1,6 +1,7 @@
 require 'colorize'
 require 'pry'
 require_relative './display'
+require_relative './input_checks'
 
 class Mastermind
   include Display
@@ -25,38 +26,29 @@ class Mastermind
     input = gets.chomp
     case input
     when '1'
-      @code = cpu_generated_code
       guess_the_code
     when '2'
       puts 'Choose 4 digits ranging from 1-6'
-      @code = valid_code(gets.chomp)
       computer_plays
     end
   end
 
   def computer_plays
+    code = valid_code(gets.chomp)
     until round > 12
       guess = cpu_generated_code
+      puts guess
       round_output(round)
       guess_accuracy(guess, code)
       break if game_over?(guess, code)
 
       @round += 1
     end
-    puts win_or_loss(game_over?(guess, code))
-  end
-
-  def valid_code(input)
-    if input.size > 4 || input.split('').any? { |num| num.to_i > 6 || num.to_i < 1 }
-      puts 'Please pick only 4 numbers ranging from 1 to 6'
-      input = gets.chomp
-      valid_code(input)
-    else
-      input
-    end
+    win_or_loss(game_over?(guess, code), code)
   end
 
   def guess_the_code
+    code = cpu_generated_code
     until round > 12
       round_output(round)
       input = valid_input?(gets.chomp).to_i
@@ -65,7 +57,7 @@ class Mastermind
 
       @round += 1
     end
-    puts win_or_loss(game_over?(input, code))
+    win_or_loss(game_over?(input, code), code)
   end
 
   def cpu_generated_code
@@ -116,16 +108,6 @@ class Mastermind
     exact
   end
 
-  def valid_input?(input)
-    if input.to_s.length == 4
-      input
-    else
-      input_error
-      input = gets.chomp
-      valid_input?(input)
-    end
-  end
-
   def play_again
     conclusion
     input = gets.chomp.downcase
@@ -137,6 +119,3 @@ class Mastermind
     end
   end
 end
-
-game = Mastermind.new
-game.play_game

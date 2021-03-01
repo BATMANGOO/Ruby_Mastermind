@@ -32,8 +32,9 @@ module Display
     puts 'Input needs to be 4 numbers. Try again.'
   end
 
-  def win_or_loss(game_over)
-    game_over ? 'Yay the code has been cracked!' : 'You lose!'
+  def win_or_loss(game_over, code)
+    puts game_over ? 'Yay the code has been cracked!' : 'You lose!'
+    puts "Code was: #{code}"
   end
 
   def conclusion
