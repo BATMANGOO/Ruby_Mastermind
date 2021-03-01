@@ -39,4 +39,10 @@ module Display
   def conclusion
     puts 'Would you like to play again? y or n?'
   end
+
+  def choose_position
+    puts "would you like to be the code #{'MAKER'.red} or code #{'BREAKER'.red}?"
+    puts "Press '1' to be the #{'BREAKER'.red}"
+    puts "Press '2' to be the #{'MAKER'.red}"
+  end
 end

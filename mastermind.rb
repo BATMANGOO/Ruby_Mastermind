@@ -5,21 +5,41 @@ require_relative './display'
 class Mastermind
   include Display
   attr_accessor :round
+  attr_reader :code
 
   def initialize
     @round = 1
+    @code = nil
   end
 
   def play_game
     instructions
-    guess_the_code
+    choose_player
     play_again
   end
 
   private
 
+  def choose_player
+    choose_position
+    input = gets.chomp
+    case input
+    when '1'
+      @code = cpu_generated_code
+      guess_the_code
+    when '2'
+      puts 'Choose 4 digits ranging from 1-6'
+      @code = valid_code(gets.chomp)
+    end
+  end
+
+  def valid_code(input) # work on this
+    if input.size > 4 || input.to_i.any? { |num| num > 6 || num < 1 }
+      puts 'Please pick only 4 numbers ranging from 1 to 6'
+    end
+  end
+
   def guess_the_code
-    code = cpu_generated_code
     until round > 12
       round_output(round)
       input = valid_input?(gets.chomp).to_i
