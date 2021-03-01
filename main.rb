@@ -1,4 +1,4 @@
-require_relative './mastermind.rb'
+require_relative './mastermind'
 
 def play
   game = Mastermind.new
