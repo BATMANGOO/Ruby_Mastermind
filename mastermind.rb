@@ -30,12 +30,29 @@ class Mastermind
     when '2'
       puts 'Choose 4 digits ranging from 1-6'
       @code = valid_code(gets.chomp)
+      computer_plays
     end
   end
 
-  def valid_code(input) # work on this
-    if input.size > 4 || input.to_i.any? { |num| num > 6 || num < 1 }
+  def computer_plays
+    until round > 12
+      guess = cpu_generated_code
+      round_output(round)
+      guess_accuracy(guess, code)
+      break if game_over?(guess, code)
+
+      @round += 1
+    end
+    puts win_or_loss(game_over?(guess, code))
+  end
+
+  def valid_code(input)
+    if input.size > 4 || input.split('').any? { |num| num.to_i > 6 || num.to_i < 1 }
       puts 'Please pick only 4 numbers ranging from 1 to 6'
+      input = gets.chomp
+      valid_code(input)
+    else
+      input
     end
   end
 
@@ -114,7 +131,7 @@ class Mastermind
     input = gets.chomp.downcase
     if input == 'y'
       @round = 1
-      guess_the_code
+      choose_player
     else
       puts 'Have a great day!'
     end
